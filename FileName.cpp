@@ -222,39 +222,19 @@ Station_List delite_station(Station_List a, station_struct *b) {
 	
 	for (int j = 0; j <= b->same_station_count; j++) {
 		for (int i = 0; i < a.length; i++) {
-			printf("%s/%s", a.data[i]->name, b->same_station_list[j]->name);
-			printf("%d/%d\n", a.data[i], b->same_station_list[j]);
 			if (a.data[i] == b->same_station_list[j]) {
 				// i”Ô–Ú‚ğíœ‚µA‚»‚êˆÈ~‚ğ¶‚É‹l‚ß‚é
 				for (int k = i; k < a.length - 1; k++) {
 					a.data[k] = a.data[k + 1];
 				}
-				a.length--;  // ’·‚³‚ğ1Œ¸‚ç‚·
-				i--; // ‹l‚ß‚½‚Ì‚ÅAŸ‚Ì—v‘f‚ÌŠm”F‚Ì‚½‚ßi‚ğ1–ß‚·
-				break; // “¯‚¶—v‘f‚ª•¡”‘¶İ‚µ‚È‚¢‚È‚çbreak
+				a.length--;
+				i--; 
+				break;
 			}
 		}
 	}
 	return a;
-	/*for (int j = 0; j <= b->same_station_count; j++) {
-		int flag = 0;
-		for (int i = 0; i < a.length - 1; i++) {
-			if (a.data[i] == b->same_station_list[j]) {
-				flag = 1;
-				a.data[i] = a.data[i + 1];
-			}
-			else if (flag == 1) {
-				a.data[i] = a.data[i + 1];
-			}
-		}
-		if (flag == 1) {
-
-			a.length--;
-		}
-	}
 	
-	
-	return a;*/
 }
 Station_List delite_station(Station_List a, Station_List b) {
 	for (int i = 0; i < b.length; i++) {
@@ -336,29 +316,40 @@ Station_List* move_list(Station_List* list,station_struct* p_map,player_struct p
 				}
 				
 			}
-
-			printf("before %d|",j);
-			print_station_list(*(list + i));
-			print_station_list(One_station_step_memory);
 			*(list + i) = safe_append_station(*(list + i), One_station_step_memory);
-			printf("after |");
-			print_station_list(*(list + i));
 		}
 		
 		if (i > 1) {
-			printf("\n\n\nfinal before|");
-			print_station_list(*(list + i));
-			print_station_list(*(list + i - 2));
-			//Station_List memory = *(list + i);
+			
 			*(list + i) = delite_station(*(list + i), *(list + i - 2));
-			//*(list + i) = memory;
 		}
-		printf("final after|");
-		print_station_list(*(list + i));
-
 	}
 
 	return list;
+}
+
+
+station_struct* inputdata_convert_station(station_struct* p_map,char* input_data) {
+	station_struct* false_cv = p_map;
+	char LineColor[Num_LineColor + 1] = "MYSNPTCKI";
+	int line_min_max[Num_LineColor][2] = { {6,30},{11,21},{11,24},{11,27},{9,18},{11,36},{9,23},{1,20},{11,21} };
+	int line = Num_ele_Linecolor(*(input_data));
+	if (line < 0)return false_cv;
+	int i = 1;
+	int memory = 0;
+	int sta_number = 0;
+	while (input_data[i] == '\0') {
+		if (input_data[i] - '0' >= 0 && input_data[i] - '9' <= 0) {
+			memory = (int)(input_data[i]);
+			sta_number = sta_number * 10 + memory;
+		}
+		else {
+			return false_cv;
+		}
+	}if (line_min_max[line][0] <= sta_number && line_min_max[line][1] >= sta_number) {
+		return pmap(p_map, line, sta_number);
+	}
+
 }
 
 int main(void) {
@@ -377,8 +368,8 @@ int main(void) {
 	Station_List* p_list = list;
 	//Debug_full_printstation(p_map);
 	p_list = move_list(p_list, p_map, *(player), 4);
-	
-	/*for (int year = 1; year <= Maxyaer; year++) {
+	char player_input_data[Max_Length_Name_Station];
+	for (int year = 1; year <= Maxyaer; year++) {
 		for (int count_month = 0; count_month < 4; count_month++) {
 			int month = (count_month + 4) % 12;
 			printf("%d”N–Ú%dŒ\n",year,month);
@@ -387,9 +378,20 @@ int main(void) {
 				printf("%d\n", dice);
 				p_list = move_list(p_list, p_map, *(player+player_id), dice);
 				print_station_list(list[dice]);
+				station_struct* memory = p_map;
+				printf("i‚Ş‰w‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢:");
+				scanf("%s", player_input_data);
+				memory = inputdata_convert_station(p_map, player_input_data);
+				while (memory==p_map) {
+					printf("“ü—ÍƒGƒ‰[‚Å‚·B‚à‚¤ˆê“x“ü—Í‚µ‚Ä‚­‚¾‚³‚¢:");
+					scanf("%s", player_input_data);
+					memory = inputdata_convert_station(p_map, player_input_data);
+
+				}
+				(player + player_id)->now_station = memory;
 			}
 		}
-	}*/
+	}
 	
 	
 }
