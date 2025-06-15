@@ -10,14 +10,17 @@ struct station_struct {
 	char name[30];
 	char LineColor[Max_Cross] = {};
 	int station_number[Max_Cross] = {};
-	int same_station_count = 0;//“–ŠY‰w\‘¢‘Ì‚ğŠÜ‚Ü‚È‚¢
+	int same_station_count = 0;//å½“è©²é§…æ§‹é€ ä½“ã‚’å«ã¾ãªã„
 	station_struct* same_station_list[Max_Cross];
 };
 struct Station_List
-{
+{	
+	//dataå®¹é‡lengthãŒcapacityã‚’è¶…ãˆã‚‹ã¨ãã€capacity_dataã«æ–°ãŸã«å‹•çš„ç¢ºä¿
+	//ç”¨æ„ã—ãŸã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’dataã«ã‚³ãƒ”ãƒ¼ã™ã‚‹
 	int length;
 	int capasity;
 	station_struct** data;
+	station_struct** capasity_data;
 };
 struct player_struct {
 	char name[20];
@@ -41,27 +44,27 @@ player_struct* Debug_Initial_settings(station_struct *a) {
 		(p_player + i)->money = 10000;
 		(p_player + i)->now_station = a;
 	}
-	printf("Å‰‚Ì‰w‚Í%s‚Å‚·B\n", a->name);
+	printf("æœ€åˆã®é§…ã¯%sã§ã™ã€‚\n", a->name);
 	return p_player;
 }
 player_struct* Initial_settings(int* totalplayer,int* Maxyear,station_struct *a) {
 	player_struct* p_player;
-	printf("l”“ü—Í"); scanf("%d", totalplayer);
-	printf("”N”“ü—Í"); scanf("%d", Maxyear);
+	printf("äººæ•°å…¥åŠ›"); scanf("%d", totalplayer);
+	printf("å¹´æ•°å…¥åŠ›"); scanf("%d", Maxyear);
 	p_player = (player_struct*)malloc(sizeof(player_struct) * *(totalplayer));
 	if (p_player==NULL) {
 		exit(0);
 	}
 	for (int i = 0; i < *(totalplayer); i++) {
-		printf("%d”Ô–Ú‚Ìl‚Ì–¼‘O‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢", i + 1);
+		printf("%dç•ªç›®ã®äººã®åå‰ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„", i + 1);
 		scanf("%s", (p_player+i)->name );
 		(p_player + i)->money = 10000;
 		(p_player + i)->now_station = a;
 	}
-	printf("Å‰‚Ì‰w‚Í%s‚Å‚·B\n", a->name);
+	printf("æœ€åˆã®é§…ã¯%sã§ã™ã€‚\n", a->name);
 	return p_player;
 }
-//map’è‹`
+//mapå®šç¾©
 #define Num_LineColor 9
 #define Max_Number_Station 36
 int check_line(char* p_name_station,char* station) {
@@ -111,32 +114,32 @@ station_struct* define_map(station_struct* p_map) {
 	char LineColor[Num_LineColor + 1] = "MYSNPTCKI";
 	int line_min_max[Num_LineColor][2] = { {6,30},{11,21},{11,24},{11,27},{9,18},{11,36},{9,23},{1,20},{11,21} };
 	char sub_name_station[Num_LineColor][Max_Number_Station][30] = {
-		{"–¥–ÊŠ–ì", "–¥–Ê‘Dêã‘å‘O", "ç—¢’†‰›", "“R‘ä", "—Î’nŒö‰€", "]â", "“ŒO‘",//M
-		"V‘åã", "¼’†“‡“ì•û", "’†’Ã", "”~“c", "—„‰®‹´", "–{’¬", "SÖ‹´", "‚È‚ñ‚Î",
-		"‘å‘’¬", "“®•¨‰€‘O", "“V‰¤›", "º˜a’¬", "¼“c•Ó", "’·‹", "‚ ‚Ñ‚±",
-		"–k‰Ô“c", "V‹à‰ª", "‚È‚©‚à‚¸" },
-		{"”~“c", "”ìŒã‹´", "–{’¬", "SÖ‹´", "‚È‚ñ‚Î", "‘å‘’¬", "‰Ô‰€’¬",//Y
-		"Šİ—¢", "‹Êo", "–k‰Á‰ê‰®", "Z”V]Œö‰€"},
-		{"–ì“cã_", "‹Êì", "ˆ¢”gÀ", "¼’·–x", "÷ì", "‚È‚ñ‚Î", "“ú–{‹´",//S
-		"’J’¬‹ã’š–Ú", "’ß‹´", "¡—¢", "V[]", "¬˜H", "–k’F", "“ì’F"},
-		{"‘å³", "ƒh[ƒ€‘Oç‘ãè", "¼’·–x", "¼‘å‹´", "SÖ‹´", "’·–x‹´",//N
-		"¼‰®’¬", "’J’¬˜Z’š–Ú", "‹Ê‘¢", "Xƒm‹{", "‘åãƒrƒWƒlƒXƒp[ƒN", "‹‹´",
-		"Š—¶l’š–Ú", "¡•Ÿ’ßŒ©", "‰¡’ç", "’ßŒ©—Î’n", "–å^“ì"},
-		{"ƒRƒXƒ‚ƒXƒNƒGƒA", "ƒgƒŒ[ƒhƒZƒ“ƒ^[‘O", "’†‚Ó“ª", "ƒ|[ƒgƒ^ƒEƒ“¼",//P
-		"ƒ|[ƒgƒ^ƒEƒ““Œ", "ƒtƒFƒŠ[ƒ^[ƒ~ƒiƒ‹", "“ì`“Œ", "“ì`Œû", "•½—Ñ",
-		 "Z”V]Œö‰€"},
-		{"‘å“ú", "çŒû", "‘¾q‹´¡s", "ç—Ñ‘å‹{", "ŠÖ–Ú‚“a", "–ì]“à‘ã", "“s“‡",//T
-		"“V_‹´‹Ø˜Z’š–Ú", "’†è’¬", "”~“c", "“ìX’¬", "“V–‹´", "’J’¬l’š–Ú",
-		"’J’¬˜Z’š–Ú", "’J’¬‹ã’š–Ú", "l“V‰¤›‘O—[—zƒ–‹u", "“V‰¤›", "ˆ¢”{–ì",
-		"•¶‚Ì—¢", "“c•Ó", "‹îì’†–ì", "•½–ì", "Šì˜A‰Z”j", "oŒË", "’·Œ´", "”ª”ö“ì"},//C
-		{"ƒRƒXƒ‚ƒXƒNƒGƒA", "‘åã`", "’©’ª‹´", "•Ù“V’¬", "‹ãğ", "ˆ¢”gÀ", "–{’¬",
-		"ä‹Ø–{’¬", "’J’¬l’š–Ú", "Xƒm‹{", "—Î‹´", "[]‹´", "‚ˆä“c", "’·“c",
-		"r–{", "‹g“c", "VÎØ", "¶‹î", "”’’ë‘ä", "ŠwŒ¤–k¶‹î", "ŠwŒ¤“Ş—Ç“o”üƒ–‹u"},
-		{"–kç—¢", "R“c", "“ìç—¢", "ç—¢R", "ŠÖ‘å‘O", "–L’Ã", "“c", "‰ºV¯",//K
-		"’W˜H", "Ä“‡","“V_‹´‹Ø˜Z’š–Ú", "î’¬", "“ìX’¬", "–k•l", "ä‹Ø–{’¬", "’·–x‹´", "“ú–{‹´",
-		"Œb”ü{’¬", "“®•¨‰€‘O","“V‰º’ƒ‰®"},
-		{"ˆä‚–ì", "Œõl’š–Ú", "‚¾‚¢‚Ç‚¤–L—¢", "‘¾q‹´¡s","´…","VŒÃXs", "ŠÖ–Ú¬ˆç",//I
-		"Š—¶l’š–Ú", "°–ì", "—Î‹´", "¡—¢"}
+		{"ç®•é¢è±é‡", "ç®•é¢èˆ¹å ´é˜ªå¤§å‰", "åƒé‡Œä¸­å¤®", "æ¡ƒå±±å°", "ç·‘åœ°å…¬åœ’", "æ±Ÿå‚", "æ±ä¸‰å›½",//M
+		"æ–°å¤§é˜ª", "è¥¿ä¸­å³¶å—æ–¹", "ä¸­æ´¥", "æ¢…ç”°", "æ·€å±‹æ©‹", "æœ¬ç”º", "å¿ƒæ–æ©‹", "ãªã‚“ã°",
+		"å¤§å›½ç”º", "å‹•ç‰©åœ’å‰", "å¤©ç‹å¯º", "æ˜­å’Œç”º", "è¥¿ç”°è¾º", "é•·å±…", "ã‚ã³ã“",
+		"åŒ—èŠ±ç”°", "æ–°é‡‘å²¡", "ãªã‹ã‚‚ãš" },
+		{"æ¢…ç”°", "è‚¥å¾Œæ©‹", "æœ¬ç”º", "å¿ƒæ–æ©‹", "ãªã‚“ã°", "å¤§å›½ç”º", "èŠ±åœ’ç”º",//Y
+		"å²¸é‡Œ", "ç‰å‡º", "åŒ—åŠ è³€å±‹", "ä½ä¹‹æ±Ÿå…¬åœ’"},
+		{"é‡ç”°é˜ªç¥", "ç‰å·", "é˜¿æ³¢åº§", "è¥¿é•·å €", "æ¡œå·", "ãªã‚“ã°", "æ—¥æœ¬æ©‹",//S
+		"è°·ç”ºä¹ä¸ç›®", "é¶´æ©‹", "ä»Šé‡Œ", "æ–°æ·±æ±Ÿ", "å°è·¯", "åŒ—å·½", "å—å·½"},
+		{"å¤§æ­£", "ãƒ‰ãƒ¼ãƒ å‰åƒä»£å´", "è¥¿é•·å €", "è¥¿å¤§æ©‹", "å¿ƒæ–æ©‹", "é•·å €æ©‹",//N
+		"æ¾å±‹ç”º", "è°·ç”ºå…­ä¸ç›®", "ç‰é€ ", "æ£®ãƒå®®", "å¤§é˜ªãƒ“ã‚¸ãƒã‚¹ãƒ‘ãƒ¼ã‚¯", "äº¬æ©‹",
+		"è’²ç”Ÿå››ä¸ç›®", "ä»Šç¦é¶´è¦‹", "æ¨ªå ¤", "é¶´è¦‹ç·‘åœ°", "é–€çœŸå—"},
+		{"ã‚³ã‚¹ãƒ¢ã‚¹ã‚¯ã‚¨ã‚¢", "ãƒˆãƒ¬ãƒ¼ãƒ‰ã‚»ãƒ³ã‚¿ãƒ¼å‰", "ä¸­ãµé ­", "ãƒãƒ¼ãƒˆã‚¿ã‚¦ãƒ³è¥¿",//P
+		"ãƒãƒ¼ãƒˆã‚¿ã‚¦ãƒ³æ±", "ãƒ•ã‚§ãƒªãƒ¼ã‚¿ãƒ¼ãƒŸãƒŠãƒ«", "å—æ¸¯æ±", "å—æ¸¯å£", "å¹³æ—",
+		 "ä½ä¹‹æ±Ÿå…¬åœ’"},
+		{"å¤§æ—¥", "å®ˆå£", "å¤ªå­æ©‹ä»Šå¸‚", "åƒæ—å¤§å®®", "é–¢ç›®é«˜æ®¿", "é‡æ±Ÿå†…ä»£", "éƒ½å³¶",//T
+		"å¤©ç¥æ©‹ç­‹å…­ä¸ç›®", "ä¸­å´ç”º", "æ¢…ç”°", "å—æ£®ç”º", "å¤©æº€æ©‹", "è°·ç”ºå››ä¸ç›®",
+		"è°·ç”ºå…­ä¸ç›®", "è°·ç”ºä¹ä¸ç›®", "å››å¤©ç‹å¯ºå‰å¤•é™½ãƒ¶ä¸˜", "å¤©ç‹å¯º", "é˜¿å€é‡",
+		"æ–‡ã®é‡Œ", "ç”°è¾º", "é§’å·ä¸­é‡", "å¹³é‡", "å–œé€£ç“œç ´", "å‡ºæˆ¸", "é•·åŸ", "å…«å°¾å—"},//C
+		{"ã‚³ã‚¹ãƒ¢ã‚¹ã‚¯ã‚¨ã‚¢", "å¤§é˜ªæ¸¯", "æœæ½®æ©‹", "å¼å¤©ç”º", "ä¹æ¡", "é˜¿æ³¢åº§", "æœ¬ç”º",
+		"å ºç­‹æœ¬ç”º", "è°·ç”ºå››ä¸ç›®", "æ£®ãƒå®®", "ç·‘æ©‹", "æ·±æ±Ÿæ©‹", "é«˜äº•ç”°", "é•·ç”°",
+		"è’æœ¬", "å‰ç”°", "æ–°çŸ³åˆ‡", "ç”Ÿé§’", "ç™½åº­å°", "å­¦ç ”åŒ—ç”Ÿé§’", "å­¦ç ”å¥ˆè‰¯ç™»ç¾ãƒ¶ä¸˜"},
+		{"åŒ—åƒé‡Œ", "å±±ç”°", "å—åƒé‡Œ", "åƒé‡Œå±±", "é–¢å¤§å‰", "è±Šæ´¥", "å¹ç”°", "ä¸‹æ–°åº„",//K
+		"æ·¡è·¯", "æŸ´å³¶","å¤©ç¥æ©‹ç­‹å…­ä¸ç›®", "æ‰‡ç”º", "å—æ£®ç”º", "åŒ—æµœ", "å ºç­‹æœ¬ç”º", "é•·å €æ©‹", "æ—¥æœ¬æ©‹",
+		"æµç¾é ˆç”º", "å‹•ç‰©åœ’å‰","å¤©ä¸‹èŒ¶å±‹"},
+		{"äº•é«˜é‡", "ç‘å…‰å››ä¸ç›®", "ã ã„ã©ã†è±Šé‡Œ", "å¤ªå­æ©‹ä»Šå¸‚","æ¸…æ°´","æ–°å¤æ£®å¸‚", "é–¢ç›®æˆè‚²",//I
+		"è’²ç”Ÿå››ä¸ç›®", "é´«é‡", "ç·‘æ©‹", "ä»Šé‡Œ"}
 	};
 	
 	char* p_sub_name_station = &sub_name_station[0][0][0];
@@ -151,7 +154,7 @@ station_struct* define_map(station_struct* p_map) {
 			pmap(p_map, i, current_index)->station_number[0] = current_index;
 			strcpy(pmap(p_map, i, current_index)->name, sub_name_station[i][j]);
 			if (i == first_line) {
-				pmap(p_map, i, current_index)->same_station_list[0]= pmap(p_map, i, current_index);//‰Šú‰»ˆ—‚Ç‚¤‚µ‚æ‚¤
+				pmap(p_map, i, current_index)->same_station_list[0]= pmap(p_map, i, current_index);//åˆæœŸåŒ–å‡¦ç†ã©ã†ã—ã‚ˆã†
 			}
 			if (i != first_line) {
 				int first_min_number= line_min_max[first_line][0];
@@ -176,15 +179,15 @@ station_struct* define_map(station_struct* p_map) {
 		}
 		
 	}
-	strcpy((pmap(p_map,Num_ele_Linecolor('T'),20)->name ), "“Œ”~“c");
-	strcpy((pmap(p_map, Num_ele_Linecolor('Y'), 11)->name), "¼”~“c");
-	strcpy((pmap(p_map, Num_ele_Linecolor('Y'), 14)->name), "lƒc‹´");
+	strcpy((pmap(p_map,Num_ele_Linecolor('T'),20)->name ), "æ±æ¢…ç”°");
+	strcpy((pmap(p_map, Num_ele_Linecolor('Y'), 11)->name), "è¥¿æ¢…ç”°");
+	strcpy((pmap(p_map, Num_ele_Linecolor('Y'), 14)->name), "å››ãƒ„æ©‹");
 	
 	
 	return p_map;
 
 }
-//”Õ–ÊˆÚ“®
+//ç›¤é¢ç§»å‹•
 #define Max_Move_List 100
 
 void print_station(station_struct a) {
@@ -212,18 +215,21 @@ Station_List define_Station_List(int size) {
 	b.data = (station_struct**)malloc(sizeof(station_struct*) * size);
 	return b;
 }
-Station_List append_station(Station_List a, station_struct *b) {//ƒŠƒXƒga‚É‰wb‚ğ’Ç‰Á
+Station_List append_station(Station_List a, station_struct *b) {//ãƒªã‚¹ãƒˆaã«é§…bã‚’è¿½åŠ 
+	if (a.length >= a.capasity) {
+
+	}
 	a.data[a.length] = b;
 	a.length++;
 	
 	return a;	
 }
-Station_List delite_station(Station_List a, station_struct *b) {
+Station_List delite_station(Station_List a, station_struct *b) {//ãƒªã‚¹ãƒˆaã‹ã‚‰é§…bã‚’ã™ã¹ã¦å‰Šé™¤
 	
 	for (int j = 0; j <= b->same_station_count; j++) {
 		for (int i = 0; i < a.length; i++) {
 			if (a.data[i] == b->same_station_list[j]) {
-				// i”Ô–Ú‚ğíœ‚µA‚»‚êˆÈ~‚ğ¶‚É‹l‚ß‚é
+				// iç•ªç›®ã‚’å‰Šé™¤ã—ã€ãã‚Œä»¥é™ã‚’å·¦ã«è©°ã‚ã‚‹
 				for (int k = i; k < a.length - 1; k++) {
 					a.data[k] = a.data[k + 1];
 				}
@@ -243,7 +249,7 @@ Station_List delite_station(Station_List a, Station_List b) {
 	
 	return a;
 }
-Station_List append_station(Station_List a, Station_List b) {//ƒŠƒXƒga‚ÌŒã‚ë‚ÉƒŠƒXƒgb‚Ì“à—e‚ğ’Ç‰Á	
+Station_List append_station(Station_List a, Station_List b) {//ãƒªã‚¹ãƒˆaã®å¾Œã‚ã«ãƒªã‚¹ãƒˆbã®å†…å®¹ã‚’è¿½åŠ 	
 	
 	if (a.length + b.length > a.capasity) {
 		Station_List c = a;
@@ -256,12 +262,12 @@ Station_List append_station(Station_List a, Station_List b) {//ƒŠƒXƒga‚ÌŒã‚ë‚ÉƒŠ
 	}a.length += b.length;
 	return a;
 }
-Station_List safe_append_station(Station_List a, Station_List b) {//ƒŠƒXƒga‚ÌŒã‚ë‚ÉƒŠƒXƒgb‚Ì“à—e‚ğ”í‚è‚È‚­’Ç‰Á
+Station_List safe_append_station(Station_List a, Station_List b) {//ãƒªã‚¹ãƒˆaã®å¾Œã‚ã«ãƒªã‚¹ãƒˆbã®å†…å®¹ã‚’è¢«ã‚Šãªãè¿½åŠ 
 	a = delite_station(a, b);
 	a = append_station(a, b);
 	return a;
 }
-Station_List safe_append_station(Station_List a, station_struct *b) {//ƒŠƒXƒga‚ÌŒã‚ë‚ÉƒŠƒXƒgb‚Ì“à—e‚ğ”í‚è‚È‚­’Ç‰Á
+Station_List safe_append_station(Station_List a, station_struct *b) {//ãƒªã‚¹ãƒˆaã®å¾Œã‚ã«ãƒªã‚¹ãƒˆbã®å†…å®¹ã‚’è¢«ã‚Šãªãè¿½åŠ 
 	Station_List c = define_Station_List(1);
 	c = append_station(c, b);
 	a=safe_append_station(a, c);
@@ -281,19 +287,18 @@ void test(station_struct* p_map) {
 }
 
 
-Station_List* move_list(Station_List* list,station_struct* p_map,player_struct player,int dice) {
-	//‰Šú‰»
+Station_List* move_list(Station_List* list,station_struct* p_map,player_struct player,int dice) {//diceã§åˆ°é”å¯èƒ½ãƒã‚¹ã‚’è¿”å´
+	//åˆæœŸåŒ–
 	for (int i = 0; i <= dice; i++) {
 		*(list+i)= define_Station_List(Max_Move_List);
 	}
 	*(list) = append_station(*(list), player.now_station);
-	print_station_list(*(list));
 	int line_min_max[Num_LineColor][2] = { {6,30},{11,21},{11,24},{11,27},{9,18},{11,36},{9,23},{1,20},{11,21} };
 	
 	
 	for (int i = 1; i <= dice; i++) {
 		Station_List lastlist = *(list + i - 1);
-		for (int j = 0; j < lastlist.length; j++) {//i”Ô–Ú‚É“’B‚Å‚«‚é‚·‚×‚Ä‚Ìƒ}ƒX‚É‚Â‚¢‚ÄÀs
+		for (int j = 0; j < lastlist.length; j++) {//iç•ªç›®ã«åˆ°é”ã§ãã‚‹ã™ã¹ã¦ã®ãƒã‚¹ã«ã¤ã„ã¦å®Ÿè¡Œ
 			station_struct now_station = *(lastlist.data[j]);
 			int can_move_line = lastlist.data[j]->same_station_count+1;
 			Station_List One_station_step_memory = define_Station_List(2*Max_Cross);
@@ -338,18 +343,21 @@ station_struct* inputdata_convert_station(station_struct* p_map,char* input_data
 	int i = 1;
 	int memory = 0;
 	int sta_number = 0;
-	while (input_data[i] == '\0') {
-		if (input_data[i] - '0' >= 0 && input_data[i] - '9' <= 0) {
-			memory = (int)(input_data[i]);
+	while (input_data[i] != '\0') {
+		memory = input_data[i] - '0';
+		if (memory>= 0 && memory<= 9) {
 			sta_number = sta_number * 10 + memory;
 		}
 		else {
 			return false_cv;
 		}
+		i++;
 	}if (line_min_max[line][0] <= sta_number && line_min_max[line][1] >= sta_number) {
 		return pmap(p_map, line, sta_number);
 	}
-
+	else {
+		return false_cv;
+	}
 }
 
 int main(void) {
@@ -359,35 +367,37 @@ int main(void) {
 	
 	int totalplayer = 4;
 	player_struct* player;
-	int Maxyaer = 1;
+	int Maxyaer = 4;
 	char LineColor[Num_LineColor + 1] = "MYSNPTCKI";
 	int line_min_max[Num_LineColor][2] = { {6,30},{11,21},{11,24},{11,27},{9,18},{11,36},{9,23},{1,20},{11,21} };
-	//player=Initial_settings(&totalplayer, &Maxyaer,map[Num_ele_Linecolor('S')][10]);
-	player = Debug_Initial_settings(pmap(p_map,Num_ele_Linecolor('Y'),13));
+	player=Initial_settings(&totalplayer, &Maxyaer,pmap(p_map,Num_ele_Linecolor('S'),10));
+	//player = Debug_Initial_settings(pmap(p_map,Num_ele_Linecolor('Y'),13));
 	Station_List list[7];
 	Station_List* p_list = list;
-	//Debug_full_printstation(p_map);
+	
 	p_list = move_list(p_list, p_map, *(player), 4);
 	char player_input_data[Max_Length_Name_Station];
 	for (int year = 1; year <= Maxyaer; year++) {
 		for (int count_month = 0; count_month < 4; count_month++) {
 			int month = (count_month + 4) % 12;
-			printf("%d”N–Ú%dŒ\n",year,month);
+			printf("%då¹´ç›®%dæœˆ\n",year,month);
 			for (int player_id = 0; player_id < totalplayer; player_id++) {
 				int dice = rand() % 6 + 1;
 				printf("%d\n", dice);
 				p_list = move_list(p_list, p_map, *(player+player_id), dice);
 				print_station_list(list[dice]);
 				station_struct* memory = p_map;
-				printf("i‚Ş‰w‚ğ“ü—Í‚µ‚Ä‚­‚¾‚³‚¢:");
+				printf("é€²ã‚€é§…ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„:");
 				scanf("%s", player_input_data);
 				memory = inputdata_convert_station(p_map, player_input_data);
 				while (memory==p_map) {
-					printf("“ü—ÍƒGƒ‰[‚Å‚·B‚à‚¤ˆê“x“ü—Í‚µ‚Ä‚­‚¾‚³‚¢:");
+					printf("å…¥åŠ›ã‚¨ãƒ©ãƒ¼ã§ã™ã€‚ã‚‚ã†ä¸€åº¦å…¥åŠ›ã—ã¦ãã ã•ã„:");
 					scanf("%s", player_input_data);
 					memory = inputdata_convert_station(p_map, player_input_data);
 
 				}
+
+				//ã“ã“ã§ã‚¤ãƒ™ãƒ³ãƒˆå‡¦ç†
 				(player + player_id)->now_station = memory;
 			}
 		}
