@@ -14,10 +14,13 @@ struct station_struct {
 	station_struct* same_station_list[Max_Cross];
 };
 struct Station_List
-{
+{	
+	//data容量lengthがcapacityを超えるとき、capacity_dataに新たに動的確保
+	//用意したアドレスをdataにコピーする
 	int length;
 	int capasity;
 	station_struct** data;
+	station_struct** capasity_data;
 };
 struct player_struct {
 	char name[20];
@@ -213,12 +216,15 @@ Station_List define_Station_List(int size) {
 	return b;
 }
 Station_List append_station(Station_List a, station_struct *b) {//リストaに駅bを追加
+	if (a.length >= a.capasity) {
+
+	}
 	a.data[a.length] = b;
 	a.length++;
 	
 	return a;	
 }
-Station_List delite_station(Station_List a, station_struct *b) {
+Station_List delite_station(Station_List a, station_struct *b) {//リストaから駅bをすべて削除
 	
 	for (int j = 0; j <= b->same_station_count; j++) {
 		for (int i = 0; i < a.length; i++) {
@@ -281,13 +287,12 @@ void test(station_struct* p_map) {
 }
 
 
-Station_List* move_list(Station_List* list,station_struct* p_map,player_struct player,int dice) {
+Station_List* move_list(Station_List* list,station_struct* p_map,player_struct player,int dice) {//diceで到達可能マスを返却
 	//初期化
 	for (int i = 0; i <= dice; i++) {
 		*(list+i)= define_Station_List(Max_Move_List);
 	}
 	*(list) = append_station(*(list), player.now_station);
-	print_station_list(*(list));
 	int line_min_max[Num_LineColor][2] = { {6,30},{11,21},{11,24},{11,27},{9,18},{11,36},{9,23},{1,20},{11,21} };
 	
 	
@@ -338,18 +343,21 @@ station_struct* inputdata_convert_station(station_struct* p_map,char* input_data
 	int i = 1;
 	int memory = 0;
 	int sta_number = 0;
-	while (input_data[i] == '\0') {
-		if (input_data[i] - '0' >= 0 && input_data[i] - '9' <= 0) {
-			memory = (int)(input_data[i]);
+	while (input_data[i] != '\0') {
+		memory = input_data[i] - '0';
+		if (memory>= 0 && memory<= 9) {
 			sta_number = sta_number * 10 + memory;
 		}
 		else {
 			return false_cv;
 		}
+		i++;
 	}if (line_min_max[line][0] <= sta_number && line_min_max[line][1] >= sta_number) {
 		return pmap(p_map, line, sta_number);
 	}
-
+	else {
+		return false_cv;
+	}
 }
 
 int main(void) {
@@ -359,14 +367,14 @@ int main(void) {
 	
 	int totalplayer = 4;
 	player_struct* player;
-	int Maxyaer = 1;
+	int Maxyaer = 4;
 	char LineColor[Num_LineColor + 1] = "MYSNPTCKI";
 	int line_min_max[Num_LineColor][2] = { {6,30},{11,21},{11,24},{11,27},{9,18},{11,36},{9,23},{1,20},{11,21} };
-	//player=Initial_settings(&totalplayer, &Maxyaer,map[Num_ele_Linecolor('S')][10]);
-	player = Debug_Initial_settings(pmap(p_map,Num_ele_Linecolor('Y'),13));
+	player=Initial_settings(&totalplayer, &Maxyaer,pmap(p_map,Num_ele_Linecolor('S'),10));
+	//player = Debug_Initial_settings(pmap(p_map,Num_ele_Linecolor('Y'),13));
 	Station_List list[7];
 	Station_List* p_list = list;
-	//Debug_full_printstation(p_map);
+	
 	p_list = move_list(p_list, p_map, *(player), 4);
 	char player_input_data[Max_Length_Name_Station];
 	for (int year = 1; year <= Maxyaer; year++) {
@@ -388,6 +396,8 @@ int main(void) {
 					memory = inputdata_convert_station(p_map, player_input_data);
 
 				}
+
+				//ここでイベント処理
 				(player + player_id)->now_station = memory;
 			}
 		}
