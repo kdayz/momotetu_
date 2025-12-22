@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string>
 #include <stdlib.h>
+#include <cstring>
 
 #define Max_Length_Name_Station 30
 #define Max_Cross 3
