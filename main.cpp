@@ -6,26 +6,19 @@
 using namespace std;
 
 int main(void) {
-    int total_player;       //プレイヤーの合計
-    int max_year;           // 最大年数
+    // 路線数x最大駅数の駅構造体２次元配列を用意
+    Station Map[Num_LineColor][Max_Number_Station];
+    Station *p_Map = &Map[0][0];
+    p_Map = define_map(p_Map);      // マップのロード
+
+    int total_player;               //プレイヤーの合計
+    int max_year;                   // 最大年数
     cout << "人数入力: ";
     cin >> total_player;
     cout << "年数入力: ";
     cin >> max_year;
 
-    // マップの初期化
-    Map map(Num_LineColor, vector<Station>(Max_Number_Station));
-    Init_Map(map);
-    
-    vector<Station*> Station_List[total_player];
-
-    Player players[total_player];
-    for(int i = 0; i < total_player; i++){
-        string name;
-        cout << i + 1 << "番目の人の名前を入力してください";
-        cin >> name;
-        Init_Player(players[i], name, )
-    }
-
-    int totalplayer;
+    Player *p_player;
+    p_player = Init_Player(total_player, pMap(p_Map, Num_Ele_LineColor('M'),18));
+    Print_Player(p_player);
 }
