@@ -1,3 +1,4 @@
+#include <iostream>
 #include <string>
 #include <vector>
 #include "map.hpp"
@@ -34,15 +35,15 @@ Station *pMap(Station *p_Map, int i, int j){
 // 路線の名前を整数に変更
 int Num_Ele_LineColor(char LineColor) {
     switch(LineColor) {
-        case 'M' | 'm': return 0;
-        case 'Y' | 'y': return 1;
-        case 'S' | 's': return 2;
-        case 'N' | 'n': return 3;
-        case 'P' | 'p': return 4;
-        case 'T' | 't': return 5;
-        case 'C' | 'c': return 6;
-        case 'K' | 'k': return 7;
-        case 'I' | 'i': return 8;
+        case 'M': return 0;
+        case 'Y': return 1;
+        case 'S': return 2;
+        case 'N': return 3;
+        case 'P': return 4;
+        case 'T': return 5;
+        case 'C': return 6;
+        case 'K': return 7;
+        case 'I': return 8;
         default : return -1;
     }
 }
@@ -135,7 +136,7 @@ Station *define_map(Station *p_Map) {
                 // 最初に出てきたときの駅の番号(ex:本町駅ならM18の18)
                 int first_StaNum = first_min_number + first_column;
                 // 最初に出てきた路線での構造体と現在の路線での構造体
-                Station *same_station = pMap(p_Map, first_row, first_column);
+                Station *same_station = pMap(p_Map, first_row, first_StaNum);
                 Station *now_station  = pMap(p_Map, i, StaNum);
 
                 same_station->same_station_count++;
@@ -166,9 +167,9 @@ Station *define_map(Station *p_Map) {
             }
         }
     }
+    cout << Num_Ele_LineColor('T') << endl;
     pMap(p_Map, Num_Ele_LineColor('T'), 20)->StationName = "東梅田";
     pMap(p_Map, Num_Ele_LineColor('Y'), 11)->StationName = "西梅田";
     pMap(p_Map, Num_Ele_LineColor('Y'), 14)->StationName = "四ツ橋";
-
     return p_Map;
 }
