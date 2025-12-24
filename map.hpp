@@ -4,6 +4,7 @@
 #include "player.hpp"
 using namespace std;
 
+#define Max_Length_Name_Station 30
 #define Num_LineColor 9
 #define Max_Number_Station 36
 #define Max_Cross 3
@@ -49,3 +50,9 @@ int Num_Ele_LineColor(char LineColor);
 Station *Define_Map(Station *p_map);
 // プレイヤーを移動させる関数
 Station_List *Move_List(Station_List *p_list, Station *p_map, Player *p_player, int dice);
+
+
+// 駅を表示
+void print_station(Station station);
+// 駅リストに含まれる駅全てを表示
+void print_station_list(Station_List list);

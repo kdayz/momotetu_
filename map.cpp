@@ -168,12 +168,12 @@ Station *Define_Map(Station *p_map) {
             }
         }
     }
-    cout << Num_Ele_LineColor('T') << endl;
     pMap(p_map, Num_Ele_LineColor('T'), 20)->StationName = "東梅田";
     pMap(p_map, Num_Ele_LineColor('Y'), 11)->StationName = "西梅田";
     pMap(p_map, Num_Ele_LineColor('Y'), 14)->StationName = "四ツ橋";
     return p_map;
 }
+
 
 
 // =======================マップ移動関数のヘルパ関数======================
@@ -191,7 +191,7 @@ Station_List init_station_list(int size){
 Station_List append_station(Station_List list, Station *station){
     // これ以上渡された駅リストに駅を追加できないときは何もしない
     if (list.length >= list.capasity){
-        return;
+
     }
     list.station_arr[list.length] = station;
     list.length++;
@@ -224,6 +224,7 @@ Station_List delete_station(Station_List list, Station *station){
             }
         }
     }
+    return list;
 }
 // 駅リストaから駅リストbに含まれる駅をすべて削除
 Station_List delete_station(Station_List list_a, Station_List list_b){
@@ -240,6 +241,8 @@ Station_List safe_append_station(Station_List list_a, Station_List list_b){
     list_a = delete_station(list_a, list_b);
     // 削除後追加し直す
     list_a = append_station(list_a, list_b);
+
+    return list_a;
 }
 // 駅リストの後ろに駅を被りなく追加
 Station_List safe_append_station(Station_List list, Station *station){
@@ -248,6 +251,8 @@ Station_List safe_append_station(Station_List list, Station *station){
     temp_list = append_station(temp_list, station);
     list = safe_append_station(list, temp_list);
     free(temp_list.station_arr);
+
+    return list;
 }
 
 // =======================マップ移動関数======================
@@ -286,7 +291,7 @@ Station_List *Move_List(Station_List *p_list, Station *p_map, Player *p_player, 
 
             for(int k = 0; k < can_move_line; k++){
                 int now_LineNumber    = Num_Ele_LineColor(*now_station.LineColor[k].c_str());
-                int now_StationNumber = now_station.StationName[k];
+                int now_StationNumber = now_station.StationNumber[k];
                 int now_min_max[2] = { Line_Min_Max[now_LineNumber][0], Line_Min_Max[now_LineNumber][1] };
                 int count = 0;
 
@@ -296,7 +301,7 @@ Station_List *Move_List(Station_List *p_list, Station *p_map, Player *p_player, 
                     One_Station_Step_Memory = safe_append_station(One_Station_Step_Memory, pMap(p_map, now_LineNumber, now_StationNumber - 1));
                 }
                 // 現在の駅番号より一つ大きい番号がその路線の最大番号以下のとき
-                if(now_StationNumber + 1 >= now_min_max[1]){
+                if(now_StationNumber + 1 <= now_min_max[1]){
                     // 一つ前の駅を追加
                     One_Station_Step_Memory = safe_append_station(One_Station_Step_Memory, pMap(p_map, now_LineNumber, now_StationNumber + 1));
                 }
@@ -306,9 +311,32 @@ Station_List *Move_List(Station_List *p_list, Station *p_map, Player *p_player, 
         }
 
         if (i > 1){
-            *(p_list + i) = delete_station(*(p_list + i), j*(p_list + i) - 2);
+            *(p_list + i) = delete_station(*(p_list + i), *(p_list + i - 2));
         }
     }
-    
     return p_list;
+}
+
+
+// =======================デバッグ用関数======================
+
+// 駅を表示
+void print_station(Station station){
+    cout << station.StationName;
+    for(int i = 0; i < Max_Cross; i++){
+        if(station.StationNumber[i] == 0)
+            break;
+        cout << station.LineColor[i] << station.StationNumber[i];
+    }
+}
+// 駅リストに含まれる駅全てを表示
+void print_station_list(Station_List list){
+    for(int i = 0; i < list.length - 1; i++){
+        print_station(*(list.station_arr[i]));
+        cout << ", ";
+    }
+    if(list.length - 1 != 0) {
+        print_station(*(list.station_arr[list.length - 1]));
+    }
+    cout << endl;
 }
