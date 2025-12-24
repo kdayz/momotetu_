@@ -4,7 +4,7 @@
 #include "map.hpp"
 using namespace std;
 
-// ===================マップ定義のヘルパ関数===================
+// ===================駅マップの定義関数のヘルパ関数===================
 
 // 今触っている駅名より前に同じ駅名が駅名の集合に存在すれば、その行の値を返す
 // なければ現在の駅名の行(路線)の値を返す
@@ -28,8 +28,8 @@ int check_StaNumber(const string *OriginStationName, const string &NowStation){
 }
 
 // 全体マップの編集点を二次元座標(i, j)に移動する
-Station *pMap(Station *p_Map, int i, int j){
-    return p_Map + i * Max_Number_Station + j;
+Station *pMap(Station *p_map, int i, int j){
+    return p_map + i * Max_Number_Station + j;
 }
 
 // 路線の名前を整数に変更
@@ -48,10 +48,11 @@ int Num_Ele_LineColor(char LineColor) {
     }
 }
 
-// =======================駅マップの定義======================
+
+// =======================駅マップの定義関数======================
 
 // マップ定義関数
-Station *define_map(Station *p_Map) {
+Station *Define_Map(Station *p_map) {
     // 路線の種類
     const char LineColors[Num_LineColor + 1] = "MYSNPTCKI";
 
@@ -115,29 +116,29 @@ Station *define_map(Station *p_Map) {
         int start = Line_Min_Max[i][0];
 
         for (int j = 0; j < Line_Min_Max[i][1] - Line_Min_Max[i][0] + 1; j++) {
-            // 現在の現実準拠の駅の番号(路線図参照)
+            // 現在の現実準拠の駅番号(路線図参照)
             int StaNum = start + j;
             // 今扱っている駅より前に同じ駅名があればその二次元座標(なければ現在の座標)を取得
             int first_row    = check_Line(p_OriginStationName, StationNames[i][j]);       // 行
             int first_column = check_StaNumber(p_OriginStationName, StationNames[i][j]);  // 列
 
             // 現在の駅名の情報をマップに登録
-            pMap(p_Map, i, StaNum)->StationName      = StationNames[i][j];
-            pMap(p_Map, i, StaNum)->LineColor[0]     = LineColors[i];
-            pMap(p_Map, i, StaNum)->StationNumber[0] = StaNum;
+            pMap(p_map, i, StaNum)->StationName      = StationNames[i][j];
+            pMap(p_map, i, StaNum)->LineColor[0]     = LineColors[i];
+            pMap(p_map, i, StaNum)->StationNumber[0] = StaNum;
 
             // 現在の駅名が初出の場合、乗り換えリストの頭に現在の駅のポインタを設定
             if(i == first_row){
-                pMap(p_Map, i, StaNum)->same_station_list[0] = pMap(p_Map, i, StaNum);
+                pMap(p_map, i, StaNum)->same_station_list[0] = pMap(p_map, i, StaNum);
             }
             // 現在の駅名が既出の場合
             if(i != first_row){
                 int first_min_number = Line_Min_Max[first_row][0];
-                // 最初に出てきたときの駅の番号(ex:本町駅ならM18の18)
+                // 最初に出てきたときの駅番号(ex:本町駅ならM18の18)
                 int first_StaNum = first_min_number + first_column;
                 // 最初に出てきた路線での構造体と現在の路線での構造体
-                Station *same_station = pMap(p_Map, first_row, first_StaNum);
-                Station *now_station  = pMap(p_Map, i, StaNum);
+                Station *same_station = pMap(p_map, first_row, first_StaNum);
+                Station *now_station  = pMap(p_map, i, StaNum);
 
                 same_station->same_station_count++;
                 int same_station_number = same_station->same_station_count;
@@ -168,8 +169,146 @@ Station *define_map(Station *p_Map) {
         }
     }
     cout << Num_Ele_LineColor('T') << endl;
-    pMap(p_Map, Num_Ele_LineColor('T'), 20)->StationName = "東梅田";
-    pMap(p_Map, Num_Ele_LineColor('Y'), 11)->StationName = "西梅田";
-    pMap(p_Map, Num_Ele_LineColor('Y'), 14)->StationName = "四ツ橋";
-    return p_Map;
+    pMap(p_map, Num_Ele_LineColor('T'), 20)->StationName = "東梅田";
+    pMap(p_map, Num_Ele_LineColor('Y'), 11)->StationName = "西梅田";
+    pMap(p_map, Num_Ele_LineColor('Y'), 14)->StationName = "四ツ橋";
+    return p_map;
+}
+
+
+// =======================マップ移動関数のヘルパ関数======================
+
+// 駅リストの初期化
+Station_List init_station_list(int size){
+    Station_List list;
+    list.length = 0;
+    list.capasity = size;
+    list.station_arr = (Station**)malloc(sizeof(Station*) * size);
+    return list;
+}
+
+// 駅リストに駅を追加する
+Station_List append_station(Station_List list, Station *station){
+    // これ以上渡された駅リストに駅を追加できないときは何もしない
+    if (list.length >= list.capasity){
+        return;
+    }
+    list.station_arr[list.length] = station;
+    list.length++;
+
+    return list;
+}
+// 駅リストaに駅リストbに含まれるすべての駅を追加
+Station_List append_station(Station_List list_a, Station_List list_b){
+    for(int i = 0; i < list_b.length; i++){
+        list_a = append_station(list_a, list_b.station_arr[i]);
+    }
+    return list_a;
+}
+
+// 駅リストから駅を削除する
+Station_List delete_station(Station_List list, Station *station){
+    // 渡された駅が持つ乗り換え可能な駅ごと駅リストから削除する
+
+    for(int j = 0; j <= station->same_station_count; j++){
+        for(int i = 0; i < list.length; i++){
+            // 駅リストが持つ駅配列のi番目が渡された駅のもつ乗り換え可能な駅もしくはその駅自身のとき
+            if(list.station_arr[i] == station->same_station_list[j]){
+                // i番目を削除してそれ以降を詰めていく
+                for(int k = i; k < list.length - 1; k++){
+                    list.station_arr[k] = list.station_arr[k + 1];
+                }
+                list.length--;
+                // i--;
+                break;
+            }
+        }
+    }
+}
+// 駅リストaから駅リストbに含まれる駅をすべて削除
+Station_List delete_station(Station_List list_a, Station_List list_b){
+    for(int i = 0; i < list_b.length; i++){
+        list_a = append_station(list_a, list_b.station_arr[i]);
+    }
+
+    return list_a;
+}
+
+// 駅リストaの後ろに駅リストbに含まれる駅を被りなくすべて追加
+Station_List safe_append_station(Station_List list_a, Station_List list_b){
+    // 駅リストaとbの被っている駅を一旦削除
+    list_a = delete_station(list_a, list_b);
+    // 削除後追加し直す
+    list_a = append_station(list_a, list_b);
+}
+// 駅リストの後ろに駅を被りなく追加
+Station_List safe_append_station(Station_List list, Station *station){
+    // 一時的に一駅保存するだけの駅リストを作る
+    Station_List temp_list = init_station_list(1);
+    temp_list = append_station(temp_list, station);
+    list = safe_append_station(list, temp_list);
+    free(temp_list.station_arr);
+}
+
+// =======================マップ移動関数======================
+
+// マップ移動関数
+Station_List *Move_List(Station_List *p_list, Station *p_map, Player *p_player, int dice){
+    // 進めるマス分の駅リストの初期化
+    for(int i = 0; i <= dice; i++){
+        *(p_list + i) = init_station_list(Max_Move_List);
+    }
+    *(p_list) = append_station(*(p_list), p_player->now_station);
+    // その路線における最小番号と最大番号
+    const int Line_Min_Max[Num_LineColor][2] = {
+        {6,  30},   // 御堂筋線
+        {11, 21},   // 四つ橋線
+        {11, 24},   // 千日前線
+        {11, 27},   // 長堀鶴見緑地線
+        {9,  18},   // ニュートラム
+        {11, 36},   // 谷町線
+        {9,  23},   // 中央線
+        {1,  20},   // 堺筋線
+        {11, 21}    // 今里ライナー
+    };
+
+    for(int i = 1; i <= dice; i++){
+        // 駅リストの配列のi番目を現在の駅リストとして呼び出し
+        Station_List lastlist = *(p_list + i - 1);
+
+        for(int j = 0; j < lastlist.length; j++){
+            // 現在の駅リストのj番目の駅を呼び出し
+            Station now_station = *(lastlist.station_arr[j]);
+            // 乗り換えできる路線数
+            int can_move_line = lastlist.station_arr[j]->same_station_count + 1;
+            // 一つ前もしくは後ろの駅のすべてを保存するための駅リスト
+            Station_List One_Station_Step_Memory = init_station_list(2 * Max_Cross);
+
+            for(int k = 0; k < can_move_line; k++){
+                int now_LineNumber    = Num_Ele_LineColor(*now_station.LineColor[k].c_str());
+                int now_StationNumber = now_station.StationName[k];
+                int now_min_max[2] = { Line_Min_Max[now_LineNumber][0], Line_Min_Max[now_LineNumber][1] };
+                int count = 0;
+
+                // 現在の駅番号より一つ小さい番号がその路線の最小番号以上のとき
+                if(now_StationNumber - 1 >= now_min_max[0]){
+                    // 一つ後ろの駅を追加
+                    One_Station_Step_Memory = safe_append_station(One_Station_Step_Memory, pMap(p_map, now_LineNumber, now_StationNumber - 1));
+                }
+                // 現在の駅番号より一つ大きい番号がその路線の最大番号以下のとき
+                if(now_StationNumber + 1 >= now_min_max[1]){
+                    // 一つ前の駅を追加
+                    One_Station_Step_Memory = safe_append_station(One_Station_Step_Memory, pMap(p_map, now_LineNumber, now_StationNumber + 1));
+                }
+                // 現在の駅番号がその路線の番号の範囲外のときはなにもしない
+            }
+            *(p_list + i) = safe_append_station(*(p_list + i), One_Station_Step_Memory);
+        }
+
+        if (i > 1){
+            *(p_list + i) = delete_station(*(p_list + i), j*(p_list + i) - 2);
+        }
+    }
+    
+    return p_list;
 }

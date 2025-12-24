@@ -7,6 +7,7 @@ using namespace std;
 #define Num_LineColor 9
 #define Max_Number_Station 36
 #define Max_Cross 3
+#define Max_Move_List 100
 
 // 路線の名前を数字で呼び出して文字を返す
 enum class Line {
@@ -33,19 +34,18 @@ struct Station{
 // 駅の構造体のリスト
 // 駒を進めるときの停まれる駅の探索に使う
 struct Station_List{
-    int length;
-    int capasity;
-    Station **data;
-    Station **capasity_data;
+    int length;                     // 駅リストの要素数
+    int capasity;                   // 駅リストの容量
+    Station **station_arr;          // 駅を表すポインタの配列
 };
 
 // 全体マップの編集点を二次元座標(i, j)に移動する
-Station *pMap(Station *p_Map, int i, int j);
+Station *pMap(Station *p_map, int i, int j);
 // 路線の名前を整数に変更
 int Num_Ele_LineColor(char LineColor);
 
 
 // マップ定義関数
-Station *define_map(Station *p_Map);
+Station *Define_Map(Station *p_map);
 // プレイヤーを移動させる関数
-Station_List *move_list(Station_List *p_list, Station *p_Map, Player *p_player, int dice);
+Station_List *Move_List(Station_List *p_list, Station *p_map, Player *p_player, int dice);
