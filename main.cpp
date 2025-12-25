@@ -9,7 +9,7 @@ using namespace std;
 // 乱数生成器の初期化
 random_device rd;   // ハードウェア乱数生成機
 mt19937 mt(rd());   // メルセンヌ・ツイスタ法の生成器
-// 1~6までの一様分布の乱数を生成(サイコロ)
+// 1~6までの一様分布の乱数を生成(サイコロ)hollo
 uniform_int_distribution<int> Dice(1, 6);
 
 // 入力された駅を駅構造体にして返却(不正な入力にはマップそのものを返す)
