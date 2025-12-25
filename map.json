@@ -101,7 +101,10 @@
     "M22": {
         "StationName": "動物園前",
         "LineColor": "M",
-        "StationNumber": 22
+        "StationNumber": 22,
+        "Transfer": [
+            "K19"
+        ]
     },
     "M23": {
         "StationName": "天王寺",
@@ -166,8 +169,9 @@
         "LineColor": "Y",
         "StationNumber": 13,
         "Transfer": [
+            "M18",
             "C16",
-            "M18"
+            
         ]
     },
     "Y14": {
@@ -276,7 +280,10 @@
     "S18": {
         "StationName": "谷町九丁目",
         "LineColor": "S",
-        "StationNumber": 18
+        "StationNumber": 18,
+        "Transfer": [
+            "T25"
+        ]
     },
     "S19": {
         "StationName": "鶴橋",
@@ -286,7 +293,10 @@
     "S20": {
         "StationName": "今里",
         "LineColor": "S",
-        "StationNumber": 20
+        "StationNumber": 20,
+        "Transfer": [
+            "I21"
+        ]
     },
     "S21": {
         "StationName": "",
@@ -346,7 +356,7 @@
         "LineColor": "N",
         "StationNumber": 16,
         "Transfer": [
-            "S17"
+            "K16"
         ]
     },
     "N17": {
@@ -365,7 +375,7 @@
     "N19": {
         "StationName": "玉造",
         "LineColor": "N",
-        "StationNumber": 19,
+        "StationNumber": 19
     },
     "N20": {
         "StationName": "森ノ宮",
@@ -877,7 +887,7 @@
         "LineColor": "K",
         "StationNumber": 20
     },
-    
+
     "I11": {
         "StationName": "井高野",
         "LineColor": "I",
@@ -940,6 +950,9 @@
     "I21": {
         "StationName": "今里",
         "LineColor": "I",
-        "StationNumber": 21
+        "StationNumber": 21,
+        "Transfer": [
+            "S20"
+        ]
     }
 }
