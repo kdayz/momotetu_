@@ -229,7 +229,7 @@ Station_List delete_station(Station_List list, Station *station){
 // 駅リストaから駅リストbに含まれる駅をすべて削除
 Station_List delete_station(Station_List list_a, Station_List list_b){
     for(int i = 0; i < list_b.length; i++){
-        list_a = append_station(list_a, list_b.station_arr[i]);
+        list_a = delete_station(list_a, list_b.station_arr[i]);
     }
 
     return list_a;
@@ -253,6 +253,10 @@ Station_List safe_append_station(Station_List list, Station *station){
     free(temp_list.station_arr);
 
     return list;
+}
+// masashi
+void a(){
+    cout << "a" << endl;
 }
 
 // =======================マップ移動関数======================
